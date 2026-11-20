@@ -1,8 +1,5 @@
 package vista;
 
-import modelo.Bebida;
-import modelo.Comida;
-import modelo.Producto;
 import modelo.ReglaDescuento;
 import persistencia.ConexionBD;
 
@@ -65,30 +62,22 @@ public class VentanaDescuentos extends JFrame {
         areaResultado.append("--------------------------------------------------\n");
     }
 
-    private void procesarCalculo() {
+        private void procesarCalculo() {
         try {
-            double montoIngresado = Double.parseDouble(txtMonto.getText().trim());
-            if (montoIngresado < 0) {
-                areaResultado.append("⚠️ Ingrese un monto positivo.\n");
+            double monto = Double.parseDouble(txtMonto.getText().trim());
+            if (monto < 0) {
+                areaResultado.append("Ingrese un monto positivo.\n");
                 return;
             }
 
-            // Demostración de polimorfismo con las clases hijas
-            Producto ejemploProducto = (montoIngresado > 10.0)
-                    ? new Comida("Combo Especial", montoIngresado, false)
-                    : new Bebida("Jugo Natural", montoIngresado, 350);
+            double totalFinal = reglaLambda.aplicarDescuento(monto);
+            double descuento = monto - totalFinal;
 
-            double totalFinal = ejemploProducto.calcularPrecioFinal(reglaLambda);
-            double ahorro = montoIngresado - totalFinal;
-
-            areaResultado.append(String.format("Producto: %s | Tipo: %s\n", 
-                    ejemploProducto.getNombre(), ejemploProducto.getTipo()));
-            areaResultado.append(String.format("Monto base: $%.2f | Descuento: $%.2f\n", 
-                    montoIngresado, ahorro));
-            areaResultado.append(String.format("TOTAL A PAGAR: $%.2f\n\n", totalFinal));
+            areaResultado.append(String.format("Monto: $%.2f | Descuento: $%.2f\n", monto, descuento));
+            areaResultado.append(String.format("Total a pagar: $%.2f\n\n", totalFinal));
 
         } catch (NumberFormatException ex) {
-            areaResultado.append("⚠️ Error: Por favor ingrese un número válido.\n\n");
+            areaResultado.append("Error: ingrese un numero valido.\n\n");
         }
     }
 
